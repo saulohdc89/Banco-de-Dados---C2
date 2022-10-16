@@ -21,11 +21,11 @@ class Controller_Clientes:
             endereco = input("Endereço: ")
             telefone = input("Telefone:")
             # Insere e persiste o novo cliente
-            oracle.write(f"insert into clientes values ('{cpf}', '{nome}' '{endereco}','({telefone})')")
+            oracle.write(f"insert into clientes values ('{cpf}', '{nome}' '{endereco}','{telefone}')")
             # Recupera os dados do novo cliente criado transformando em um DataFrame
             df_cliente = oracle.sqlToDataFrame(f"select cpf, nome from clientes where cpf = '{cpf}'")
             # Cria um novo objeto Cliente
-            novo_cliente = Clientes(df_cliente.cpf.values[0], df_cliente.nome.values[0],df_cliente.endereco[0],df_cliente.telefone[0])
+            novo_cliente = Clientes(df_cliente.cpf.values[0], df_cliente.nome.values[0],df_cliente.endereco.values[0],df_cliente.telefone.values[0])
             # Exibe os atributos do novo cliente
             print(novo_cliente.to_string())
             # Retorna o objeto novo_cliente para utilização posterior, caso necessário
@@ -50,7 +50,7 @@ class Controller_Clientes:
             novo_telefone = input("Telefone:")
 
             # Atualiza o nome do cliente existente
-            oracle.write(f"update clientes set nome = '{novo_nome}' where cpf = {cpf}")
+            oracle.write(f"update clientes set nome = '{novo_nome},{novo_endereco},{novo_telefone}' where cpf = {cpf}")
             # Recupera os dados do novo cliente criado transformando em um DataFrame
             df_cliente = oracle.sqlToDataFrame(f"select cpf, nome from clientes where cpf = {cpf}")
             # Cria um novo objeto cliente
@@ -78,7 +78,7 @@ class Controller_Clientes:
             # Revome o cliente da tabela
             oracle.write(f"delete from clientes where cpf = {cpf}")            
             # Cria um novo objeto Cliente para informar que foi removido
-            cliente_excluido = Clientes(df_cliente.cpf.values[0], df_cliente.nome.values[0])
+            cliente_excluido = Clientes(df_cliente.cpf.values[0], df_cliente.nome.values[0], df_cliente.endereco.values[0],df_cliente.telefone.values[0])
             # Exibe os atributos do cliente excluído
             print("Cliente Removido com Sucesso!")
             print(cliente_excluido.to_string())

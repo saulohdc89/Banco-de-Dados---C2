@@ -6,6 +6,7 @@ from controller.controller_pedido import Controller_Pedido
 from model.fornecedores import Fornecedor
 from controller.controller_fornecedor import Controller_Fornecedor
 from conexion.oracle_queries import OracleQueries
+from datetime import date
 
 class Controller_Item_Pedido:
     def __init__(self):
