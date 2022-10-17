@@ -69,17 +69,17 @@ class Controller_Locacoes:
         end;
         """, data)
         # Recupera o código do novo item de pedido
-        codigo_item_pedido = output_value.getvalue()
+        codigo_devolucao = output_value.getvalue()
         # Persiste (confirma) as alterações
         oracle.conn.commit()
         # Recupera os dados do novo item de pedido criado transformando em um DataFrame
-        df_item_pedido = oracle.sqlToDataFrame(f"select codigo_item_pedido, quantidade, valor_unitario, codigo_pedido, codigo_produto from itens_pedido where codigo_item_pedido = {codigo_item_pedido}")
+        df_locacao = oracle.sqlToDataFrame(f"select codigo_item_pedido, quantidade, valor_unitario, codigo_pedido, codigo_produto from itens_pedido where codigo_item_pedido = {codigo_item_pedido}")
         # Cria um novo objeto Item de Pedido
-        novo_item_pedido = ItemPedido(df_item_pedido.codigo_item_pedido.values[0], df_item_pedido.quantidade.values[0], df_item_pedido.valor_unitario.values[0], pedido, produto)
+        nova_locacao = Locacoes(df_item_pedido.data_devolucao.values[0], df_item_pedido.quantidade.values[0], df_item_pedido.valor_unitario.values[0], pedido, produto)
         # Exibe os atributos do novo Item de Pedido
-        print(novo_item_pedido.to_string())
+        print(nova_locacao.to_string())
         # Retorna o objeto novo_item_pedido para utilização posterior, caso necessário
-        return novo_item_pedido
+        return nova_locacao
 
     def atualizar_locacoes (self) -> Locacoes:
         # Cria uma nova conexão com o banco que permite alteração
@@ -125,7 +125,7 @@ class Controller_Locacoes:
             print(f"O código {codigo_item_pedido} não existe.")
             return None
 
-    def excluir_item_pedido(self):
+    def excluir_locacoes(self):
         # Cria uma nova conexão com o banco que permite alteração
         oracle = OracleQueries(can_write=True)
         oracle.connect()
@@ -152,7 +152,7 @@ class Controller_Locacoes:
         else:
             print(f"O código {codigo_item_pedido} não existe.")
 
-    def verifica_existencia_item_pedido(self, oracle:OracleQueries, codigo:int=None) -> bool:
+    def verifica_locacoes(self, oracle:OracleQueries, codigo:int=None) -> bool:
         # Recupera os dados do novo pedido criado transformando em um DataFrame
         df_pedido = oracle.sqlToDataFrame(f"select codigo_item_pedido, quantidade, valor_unitario, codigo_pedido, codigo_produto from itens_pedido where codigo_item_pedido = {codigo}")
         return df_pedido.empty
@@ -160,14 +160,14 @@ class Controller_Locacoes:
     def listar_locacoes(self, oracle:OracleQueries, need_connect:bool=False):
         query = """
                 select l.data_devolucao
-                    , l.cpf
+                    , l.cpf as cliente
                     , l.nome as cliente
                     , nvl(f.nome_fantasia, f.razao_social) as empresa
                     , i.codigo_item_pedido as item_pedido
                     , prd.descricao_produto as produto
                     , i.quantidade
                     , i.valor_unitario
-                    , (i.quantidade * i.valor_unitario) as valor_total
+                    , 
                 from pedidos p
                 inner join clientes c
                 on p.cpf = c.cpf
