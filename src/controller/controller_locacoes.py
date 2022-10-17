@@ -21,7 +21,7 @@ class Controller_Locacoes:
         
         # Cria uma nova conexão com o banco
         oracle = OracleQueries()
-        data_hoje = data_today
+        data_hoje = date.today()
         # Lista os automoveis existentes para inserir na locacao
         self.listar_clientes(oracle, need_connect=True)
         cpf = str(input("Digite o número do CPF do Cliente: "))
@@ -32,25 +32,25 @@ class Controller_Locacoes:
         # Lista os modelos existentes para inserir no item de pedido
         self.listar_modelos(oracle, need_connect=True)
         codigo_modelo = str(input("Digite o código dos modelos: "))
-        modelos = self.valida_produto(oracle, codigo_modelo)
+        modelos = self.valida_modelo(oracle, codigo_modelo)
         if modelos == None:
             return None
 
         self.listar_marcas(oracle, need_connect=True)
-        codigo_modelo = str(input("Digite a marca: "))
-        marcas = self.valida_produto(oracle, codigo_modelo)
+        codigo_modelo = str(input("Digite a  "))
+        marcas = self.valida_marca(oracle, codigo_modelo)
         if marcas == None:
             return None
 
 
         self.listar_automoveis(oracle, need_connect=True)
-        codigo_automoveis = str(input("Digite o automovel: "))
-        automoveis = self.valida_clientes(oracle, codigo_automoveis)
+        codigo_automoveis = str(input("Digite a placa do automovel: "))
+        automoveis = self.valida_automoveis(oracle, codigo_automoveis)
         if automoveis == None:
             return None
         # Solicita a quantidade de itens do pedido para o produto selecionado
         # Solicita o valor unitário do produto selecionado
-        data_devolucao = input("Data de devolucao")
+        idata_devolucao = input("Data de devolucao:")
 
         # Recupera o cursor para executar um bloco PL/SQL anônimo
         cursor = oracle.connect()
@@ -58,14 +58,14 @@ class Controller_Locacoes:
         output_value = cursor.var(int)
 
         # Cria um dicionário para mapear as variáveis de entrada e saída
-        data = dict(codigo=output_value, data_devolucao, valor_unitario=valor_unitario, codigo_pedido=int(pedido.get_codigo_pedido()), codigo_produto=int(produto.get_codigo()))
+        data = dict(codigo=output_value, data_devolucao = idata_devolucao, , codigo_pedido=int(pedido.get_codigo_pedido()), codigo_produto=int(produto.get_codigo()))
         # Executa o bloco PL/SQL anônimo para inserção do novo item de pedido e recuperação da chave primária criada pela sequence
 
         #Locacaoes datava_devolucao, cpf, Placa, nome_modelo, nome_marca, data_locacao
         cursor.execute("""
         begin
-            :codigo := LOCACCOES_CODIGO_LOCACOES_SEQ.NEXTVAL;
-            insert into locacacoes values(:codigo, :, :valor_unitario, :codigo_pedido, :codigo_produto);
+            :data_devolucao := LOCACOES_SEQ.NEXTVAL;
+            insert into locacacoes values(data_devolucao:cpf,:nome_modelo,:nome_marca :data_locacao);
         end;
         """, data)
         # Recupera o código do novo item de pedido
@@ -157,11 +157,11 @@ class Controller_Locacoes:
         df_pedido = oracle.sqlToDataFrame(f"select codigo_item_pedido, quantidade, valor_unitario, codigo_pedido, codigo_produto from itens_pedido where codigo_item_pedido = {codigo}")
         return df_pedido.empty
 
-    def listar_pedidos(self, oracle:OracleQueries, need_connect:bool=False):
+    def listar_locacoes(self, oracle:OracleQueries, need_connect:bool=False):
         query = """
-                select p.codigo_pedido
-                    , p.data_pedido
-                    , c.nome as cliente
+                select l.data_devolucao
+                    , l.cpf
+                    , l.nome as cliente
                     , nvl(f.nome_fantasia, f.razao_social) as empresa
                     , i.codigo_item_pedido as item_pedido
                     , prd.descricao_produto as produto
