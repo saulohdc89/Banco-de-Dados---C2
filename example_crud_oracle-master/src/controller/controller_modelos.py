@@ -46,11 +46,11 @@ class Controller_Modelos:
         # Cria um novo objeto modelo
         novo_modelo = Modelos(df_modelo.codigo_modelo.values[0], df_modelo.nome_modelo.values[0], marcas)
         # Exibe os atributos do novo produto
-        print(novo_modelo.to_string())
+        print(novo_pedido.to_string())
         # Retorna o objeto novo_pedido para utilização posterior, caso necessário
-        return novo_modelo
+        return novo_pedido
 
-    def atualizar_modelo (self) -> Modelos:
+    def atualizar_modelo (self) -> Pedido:
         # Cria uma nova conexão com o banco que permite alteração
         oracle = OracleQueries(can_write=True)
         oracle.connect()
@@ -129,13 +129,13 @@ class Controller_Modelos:
         print(oracle.sqlToDataFrame(query))
 
     def valida_marca(self, oracle:OracleQueries, marca:str=None) -> Marcas:
-        if self.ctrl_marcas.verifica_existencia_marca(oracle, marca):
+        if self.ctrl_marcas.verifica_existencia_marca(oracle, cpf):
             print(f"A marca {marca} informado não existe na base.")
             return None
         else:
             oracle.connect()
             # Recupera os dados do novo cliente criado transformando em um DataFrame
-            df_marca = oracle.sqlToDataFrame(f"select nome_marca from marca where marca = {marca}")
+            df_marca = oracle.sqlToDataFrame(f"select nome_marca from marca where marca = {marcaf}")
             # Cria um novo objeto cliente
             cliente = Marcas(df_marca .marca.values[0])
             return cliente

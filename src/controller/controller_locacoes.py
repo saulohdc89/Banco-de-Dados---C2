@@ -1,43 +1,56 @@
-from model.itens_pedido import ItemPedido
-from model.produtos import Produto
-from controller.controller_produto import Controller_Produto
-from model.pedidos import Pedido
-from controller.controller_pedido import Controller_Pedido
-from model.fornecedores import Fornecedor
-from controller.controller_fornecedor import Controller_Fornecedor
+from model.locacoes import Locacoes
+from model.clientes import Clientes
+from model.automoveis import Automoveis
+from model.modelos import Modelos
+from model.marcas import Marcas
+from controller.controller_clientes import Controller_Clientes
+from controller.controller_automoveis import Controller_Automoveis
+from controller.controller_modelos import Controller_Modelos
+from controller.controller_marcas import Controller_Marcas
 from conexion.oracle_queries import OracleQueries
 from datetime import date
 
-class Controller_Item_Pedido:
+class Controller_Locacoes:
     def __init__(self):
-        self.ctrl_produto = Controller_Produto()
-        self.ctrl_pedido = Controller_Pedido()
-        self.ctrl_fornecedor = Controller_Fornecedor()
+        self.ctrl_clientes = Controller_Clientes()
+        self.ctrl_automoveis = Controller_Automoveis()
+        self.ctrl_marcas= Controller_Marcas()
         
-    def inserir_item_pedido(self) -> ItemPedido:
+    def inserir_locacoes(self) -> Locacoes:
         ''' Ref.: https://cx-oracle.readthedocs.io/en/latest/user_guide/plsql_execution.html#anonymous-pl-sql-blocks'''
         
         # Cria uma nova conexão com o banco
         oracle = OracleQueries()
-        
-        # Lista os pedido existentes para inserir no item de pedido
-        self.listar_pedidos(oracle, need_connect=True)
-        codigo_pedido = str(input("Digite o número do Pedido: "))
-        pedido = self.valida_pedido(oracle, codigo_pedido)
-        if pedido == None:
+        data_hoje = data_today
+        # Lista os automoveis existentes para inserir na locacao
+        self.listar_clientes(oracle, need_connect=True)
+        cpf = str(input("Digite o número do CPF do Cliente: "))
+        cliente = self.valida_cliente(oracle, cpf)
+        if cliente == None:
             return None
 
-        # Lista os produtos existentes para inserir no item de pedido
-        self.listar_produtos(oracle, need_connect=True)
-        codigo_produto = str(input("Digite o código do Produto: "))
-        produto = self.valida_produto(oracle, codigo_produto)
-        if produto == None:
+        # Lista os modelos existentes para inserir no item de pedido
+        self.listar_modelos(oracle, need_connect=True)
+        codigo_modelo = str(input("Digite o código dos modelos: "))
+        modelos = self.valida_produto(oracle, codigo_modelo)
+        if modelos == None:
             return None
 
+        self.listar_marcas(oracle, need_connect=True)
+        codigo_modelo = str(input("Digite a marca: "))
+        marcas = self.valida_produto(oracle, codigo_modelo)
+        if marcas == None:
+            return None
+
+
+        self.listar_automoveis(oracle, need_connect=True)
+        codigo_automoveis = str(input("Digite o automovel: "))
+        automoveis = self.valida_clientes(oracle, codigo_automoveis)
+        if automoveis == None:
+            return None
         # Solicita a quantidade de itens do pedido para o produto selecionado
-        quantidade = float(input(f"Informe a quantidade de itens do produto {produto.get_descricao()}: "))
         # Solicita o valor unitário do produto selecionado
-        valor_unitario = float(input(f"Informe o valor unitário do produto {produto.get_descricao()}: "))
+        data_devolucao = input("Data de devolucao")
 
         # Recupera o cursor para executar um bloco PL/SQL anônimo
         cursor = oracle.connect()
@@ -45,12 +58,14 @@ class Controller_Item_Pedido:
         output_value = cursor.var(int)
 
         # Cria um dicionário para mapear as variáveis de entrada e saída
-        data = dict(codigo=output_value, quantidade=quantidade, valor_unitario=valor_unitario, codigo_pedido=int(pedido.get_codigo_pedido()), codigo_produto=int(produto.get_codigo()))
+        data = dict(codigo=output_value, data_devolucao, valor_unitario=valor_unitario, codigo_pedido=int(pedido.get_codigo_pedido()), codigo_produto=int(produto.get_codigo()))
         # Executa o bloco PL/SQL anônimo para inserção do novo item de pedido e recuperação da chave primária criada pela sequence
+
+        #Locacaoes datava_devolucao, cpf, Placa, nome_modelo, nome_marca, data_locacao
         cursor.execute("""
         begin
-            :codigo := ITENS_PEDIDO_CODIGO_ITEM_SEQ.NEXTVAL;
-            insert into itens_pedido values(:codigo, :quantidade, :valor_unitario, :codigo_pedido, :codigo_produto);
+            :codigo := LOCACCOES_CODIGO_LOCACOES_SEQ.NEXTVAL;
+            insert into locacacoes values(:codigo, :, :valor_unitario, :codigo_pedido, :codigo_produto);
         end;
         """, data)
         # Recupera o código do novo item de pedido
@@ -66,7 +81,7 @@ class Controller_Item_Pedido:
         # Retorna o objeto novo_item_pedido para utilização posterior, caso necessário
         return novo_item_pedido
 
-    def atualizar_item_pedido(self) -> ItemPedido:
+    def atualizar_locacoes (self) -> Locacoes:
         # Cria uma nova conexão com o banco que permite alteração
         oracle = OracleQueries(can_write=True)
         oracle.connect()
