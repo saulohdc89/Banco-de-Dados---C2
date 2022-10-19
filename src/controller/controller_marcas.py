@@ -31,7 +31,7 @@ class Controller_Marcas:
 
     
 
-    def excluir_fornecedor(self):
+    def excluir_marca(self):
         # Cria uma nova conexão com o banco que permite alteração
         oracle = OracleQueries(can_write=True)
         oracle.connect()
@@ -40,18 +40,18 @@ class Controller_Marcas:
         marca = int(input("Nome da marca que deseja excluir: "))        
 
         # Verifica se o fornecedor existe na base de dados
-        if not self.verifica_existencia_marca(oracle, cnpj):            
+        if not self.verifica_existencia_marca(oracle, marca):            
             # Recupera os dados do novo fornecedor criado transformando em um DataFrame
             df_marca = oracle.sqlToDataFrame(f"select nome_marca from marcas where nome_marca = {marca}")
             # Revome o fornecedor da tabela
             oracle.write(f"delete from nome_marca where nome_marca = {marca}")            
             # Cria um novo objeto fornecedor para informar que foi removido
-            fornecedor_excluido = Marca(df_marca.marca.values[0])
+            fornecedor_excluido = Marcas(df_marca.nome_marcas.values[0])
             # Exibe os atributos do fornecedor excluído
             print("fornecedor Removido com Sucesso!")
             print(fornecedor_excluido.to_string())
         else:
-            print(f"O CNPJ {cnpj} não existe.")
+            print(f"O CNPJ {marca} não existe.")
 
     def verifica_existencia_marca(self, oracle:OracleQueries, marca:str=None) -> bool:
         # Recupera os dados do novo fornecedor criado transformando em um DataFrame

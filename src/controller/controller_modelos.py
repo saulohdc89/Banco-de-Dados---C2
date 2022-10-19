@@ -71,7 +71,7 @@ class Controller_Modelos:
             # Atualiza a descrição do produto existente
             oracle.write(f"update modelos set nome_modelo = '{alterar_modelo}',nome_marca = '{marcas}') where codigo_modelo = {codigo_modelo}")
             # Recupera os dados do novo produto criado transformando em um DataFrame
-            df_modelo = oracle.sqlToDataFrame(f"select codigo_modelo, nome_modelo, nome_marca from modelos where codigo_pedido = {codigo_modelo}")
+            df_modelo = oracle.sqlToDataFrame(f"select nome_modelo, nome_marca from pedidos where nome_modelo = {codigo_modelo}")
             # Cria um novo objeto Modelos
             modelo_atualizado = Modelos(df_modelo.codigo_modelo.values[0], df_modelo.nome_modelo.values[0], marcas.get_char())
             # Exibe os atributos do novo modelo
@@ -82,7 +82,7 @@ class Controller_Modelos:
             print(f"O código {codigo_modelo} não existe.")
             return None
 
-    def excluir_pedido(self):
+    def excluir_modelo(self):
         # Cria uma nova conexão com o banco que permite alteração
         oracle = OracleQueries(can_write=True)
         oracle.connect()
@@ -113,7 +113,7 @@ class Controller_Modelos:
         else:
             print(f"O código {codigo_modelo} não existe.")
 
-    def verifica_existencia_marca(self, oracle:OracleQueries, codigo:int=None) -> bool:
+    def verifica_existencia_modelo(self, oracle:OracleQueries, codigo:int=None) -> bool:
         # Recupera os dados do novo pedido criado transformando em um DataFrame
         df_pedido = oracle.sqlToDataFrame(f"select codigo_modelo, nome_modelo from modelo where codigo_modelo = {codigo}")
         return df_pedido.empty
