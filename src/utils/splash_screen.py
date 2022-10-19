@@ -13,7 +13,7 @@ class SplashScreen:
         # Consultas de contagem de registros - fim
 
         # Nome(s) do(s) criador(es)
-        self.created_by = "Howard Roatti"
+        self.created_by = "Saulo Henrique de Castro / Paulo Henrique Oliveira Marciano / Flavio Roberto Viera / Lukas da Silva Nascimento / Matheus Moreiras Alves/ Fernando Carlos Vidal da Silva "
         self.professor = "Prof. M.Sc. Howard Roatti"
         self.disciplina = "Banco de Dados"
         self.semestre = "2022/2"
