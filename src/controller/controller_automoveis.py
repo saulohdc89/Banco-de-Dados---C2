@@ -117,3 +117,55 @@ class Controller_Automoveis:
         # Recupera os dados do novo produto criado transformando em um DataFrame
         df_produto = oracle.sqlToDataFrame(f"select Placa,nome_mdelo,nome_marca,renavam, cor,N_portas,tipo_combustivel from automoveis where Placa = {codigo}")
         return df_produto.empty 
+
+
+    def listar_marcas(self, oracle:OracleQueries, need_connect:bool=False):
+        query = """
+                select mc.nome_marca
+                from marcas
+                order by mc.nome_arca
+                """
+        if need_connect:
+            oracle.connect()
+        print(oracle.sqlToDataFrame(query))
+
+    
+    def listar_modelos(self, oracle:OracleQueries, need_connect:bool=False):
+        query = """
+                select m.nome_modelo
+                    , m.nome_marca
+                    , mc.nome_marca as marcas
+                from modelos m
+                inner join marca mc
+                order by m.nome_modelo 
+                """
+        if need_connect:
+            oracle.connect()
+        print(oracle.sqlToDataFrame(query))
+    
+    def valida_modelo(self, oracle:OracleQueries, nome_modelo:int=None) -> Modelos:
+        if self.ctrl_modelos.verifica_existencia_modelo(oracle, nome_modelo):
+            print(f"O pedido {nome_modelo} informado não existe na base.")
+            return None
+        else:
+            oracle.connect()
+            # Recupera os dados do novo cliente criado transformando em um DataFrame
+            df_modelo = oracle.sqlToDataFrame(f"select nome_modelo nome_marca from modelos where nome_modelo = {nome_modelo}")
+            modelo = self.ctrl_modelos.valida_marca(oracle, df_modelo.nome_modelo.values[0])
+            # Cria um novo objeto cliente
+            modelos = Modelos(df_modelo.nome_modelo.values[0], df_modelo.nome_marca.values[0])
+            return modelos
+
+    
+    def valida_marca(self, oracle:OracleQueries, marca:int=None) -> Modelos:
+        if self.ctrl_marcas.verifica_existencia_marca(oracle, marca):
+            print(f"O pedido {marca} informado não existe na base.")
+            return None
+        else:
+            oracle.connect()
+            # Recupera os dados do novo cliente criado transformando em um DataFrame
+            df_modelo = oracle.sqlToDataFrame(f"select nome_modelo nome_marca from modelos where nome_modelo = {marca}")
+            modelo = self.ctrl_modelos.valida_marca(oracle, df_modelo.nome_modelo.values[0])
+            # Cria um novo objeto cliente
+            modelos = Modelos(df_modelo.nome_modelo.values[0], df_modelo.nome_marca.values[0])
+            return modelos
