@@ -20,7 +20,7 @@ MENU_ENTIDADES = """Entidades
 2 - MARCAS
 3 - MODELOS
 4 - AUTOMOVEIS
-5 - LOCACOES
+5 - LOCACOESs
 """
 
 # Consulta de contagem de registros por tabela
