@@ -119,5 +119,5 @@ Para que possa testar as conexões com o banco de dados Oracle e o módulo Conex
   ```
 
 ## Contato
-- [LinkedIn](https://linkedin.com/in/howardroatti)
-- [E-Mail](mailto:howardcruzroatti@gmail.com)
+
+[E-Mail](mailto:saulohdc89@gmail.com)
