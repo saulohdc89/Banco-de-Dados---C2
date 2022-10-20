@@ -77,7 +77,7 @@ class Controller_Locacoes:
         # Persiste (confirma) as alterações
         oracle.conn.commit()
         # Recupera os dados do novo item de pedido criado transformando em um DataFrame
-        df_locacao = oracle.sqlToDataFrame(f"select data_devolucao, cpf, Placa, nome_modelo, nome_marca, data_locacao from locacoes where cpf = {n_cpf}")
+        df_locacao = oracle.sqlToDataFrame(f"select data_devolucao, cpf, placa, nome_modelo, nome_marca, data_locacao from locacoes where cpf = {n_cpf}")
         # Cria um novo objeto Item de Pedido
         nova_locacao = Locacoes(df_locacao.data_devolucao.values[0],cliente,automoveis,marcas,df_locacao.data_locacao.values[0])
         # Exibe os atributos do novo Item de Pedido
@@ -171,12 +171,12 @@ class Controller_Locacoes:
 
     def listar_clientes(self, oracle:OracleQueries, need_connect:bool=False):
         query = """
-                select c.cpf
-                , c.nome
-                ,c.telefone
-                ,c.nome 
-                from clientes c
-                order by c.nome
+                select C.CPF
+                , C.NOME
+                , C.TELEFONE 
+                ,C.ENDERECO
+                from CLIENTES C
+                order by C.NOME
                 """
         if need_connect:
             oracle.connect()
@@ -184,12 +184,12 @@ class Controller_Locacoes:
 
     def listar_modelos(self, oracle:OracleQueries, need_connect:bool=False):
         query = """
-                select m.nome_modelo
-                    , m.nome_marca
-                    , mc.nome_marca as marcas
-                from modelos m
-                inner join marca mc
-                order by m.marca 
+                select M.NOME_MODELO
+                , M.NOME_MARCA
+                , MC.NOME_MARCA as MARCAS
+                from MODELOS M
+                inner join MARCAS MC
+                on  M.NOME_MARCA = MC.NOME_MARCA
                 """
         if need_connect:
             oracle.connect()
@@ -197,17 +197,23 @@ class Controller_Locacoes:
 
     def listar_automoveis(self, oracle:OracleQueries, need_connect:bool=False):
         query = """
-                select a.Placa
-                    , a.nome_modelo
-                    , a.nome_marca
-                    , a.renavam
-                    , a.cor
-                    , a.n_portas
-                    , a.tipo_combustivel
-                    , m.mc.nome_marca as modelos
-                from automoveis a
-                inner join modelos m
-                order by a.Placa 
+                select A.PLACA
+                , A.NOME_MODELO
+                , A.NOME_MARCA
+                , A.RENAVAM
+                , A.COR
+                , A.N_PORTAS
+                , A.TIPO_COMBUSTIVEL
+                , M.NOME_MODELO as MODELOS
+                , MC.NOME_MARCA as MARCAS
+                from AUTOMOVEIS A
+                inner join MODELOS M
+                on A.NOME_MODELO = M.NOME_MODELO
+                inner join A.NOME_MARCA MC
+                on A.NOME_MARCA = MC.NOME_MARCA
+                left join MARCAS MC
+                on M.NOME_MARCA = MC.NOME_MARCA
+                order by A.PLACA
                 """
         if need_connect:
             oracle.connect()

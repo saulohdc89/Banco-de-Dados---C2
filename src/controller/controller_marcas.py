@@ -18,9 +18,9 @@ class Controller_Marcas:
         if self.verifica_existencia_marca(oracle, nova_marca):            
             oracle.write(f"insert into fornecedores values ('{nome_marca}')")
             # Recupera os dados do novo fornecedor criado transformando em um DataFrame
-            df_fornecedor = oracle.sqlToDataFrame(f"select nome_marca from marcas where marca = '{nome_marca}'")
+            df_fornecedor = oracle.sqlToDataFrame(f"select nome_marca from marcas where nome_marca = '{nome_marca}'")
             # Cria um novo objeto fornecedor
-            nova_marca = Marcas(df_fornecedor.marcas.values[0])
+            nova_marca = Marcas(df_fornecedor.nome_marcas.values[0])
             # Exibe os atributos do novo fornecedor
             print(nova_marca.to_string())
             # Retorna o objeto novo_fornecedor para utilização posterior, caso necessário

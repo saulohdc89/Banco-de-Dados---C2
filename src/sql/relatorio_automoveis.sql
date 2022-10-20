@@ -1,0 +1,17 @@
+select A.PLACA
+     , A.NOME_MODELO
+     , A.NOME_MARCA
+     , A.RENAVAM
+     , A.COR
+     , A.N_PORTAS
+     , A.TIPO_COMBUSTIVEL
+     , M.NOME_MODELO as MODELOS
+     , MC.NOME_MARCA as MARCAS
+  from AUTOMOVEIS A
+  inner join MODELOS M
+  on A.NOME_MODELO = M.NOME_MODELO
+  inner join A.NOME_MARCA MC
+  on A.NOME_MARCA = MC.NOME_MARCA
+  left join MARCAS MC
+  on M.NOME_MARCA = MC.NOME_MARCA
+  order by A.PLACA

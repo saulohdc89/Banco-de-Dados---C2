@@ -33,8 +33,8 @@ class Controller_Modelos:
         # Executa o bloco PL/SQL anônimo para inserção do novo produto e recuperação da chave primária criada pela sequence
         cursor.execute("""
         begin
-            :codigo := MODELOS_CODIGO_MODELOS_SEQ.NEXTVAL;
-            insert into modelos values(:codigo, :nome_modelo, :nomemarca);
+            :nome_modelo := MODELOS_CODIGO_MODELOS_SEQ.NEXTVAL;
+            insert into modelos values(:nome_modelo, :nome_marca);
         end;
         """, data)
         # Recupera o código do novo modelo
@@ -56,10 +56,10 @@ class Controller_Modelos:
         oracle.connect()
 
         # Solicita ao usuário o código do produto a ser alterado
-        codigo_modelo = int(input("Código do Modelo que irá alterar: "))        
+        nome_modelo = int(input("Nome do do Modelo que irá alterar: "))        
 
         # Verifica se o produto existe na base de dados
-        if not self.verifica_existencia_modelo(oracle, codigo_modelo):
+        if not self.verifica_existencia_modelo(oracle, nome_modelo):
 
             # Lista os marcas existentes para inserir no pedido
             self.listar_marcas(oracle)
@@ -69,7 +69,7 @@ class Controller_Modelos:
             if marcas == None:
                 return None
             # Atualiza a descrição do produto existente
-            oracle.write(f"update modelos set nome_modelo = '{alterar_modelo}',nome_marca = '{marcas}') where codigo_modelo = {codigo_modelo}")
+            oracle.write(f"update modelos set nome_modelo = '{nome_modelo}',nome_marca = '{marcas}') where nome_modelo = {nome_modelo}")
             # Recupera os dados do novo produto criado transformando em um DataFrame
             df_modelo = oracle.sqlToDataFrame(f"select nome_modelo, nome_marca from pedidos where nome_modelo = {codigo_modelo}")
             # Cria um novo objeto Modelos
@@ -115,14 +115,14 @@ class Controller_Modelos:
 
     def verifica_existencia_modelo(self, oracle:OracleQueries, codigo:int=None) -> bool:
         # Recupera os dados do novo pedido criado transformando em um DataFrame
-        df_pedido = oracle.sqlToDataFrame(f"select codigo_modelo, nome_modelo from modelo where codigo_modelo = {codigo}")
+        df_pedido = oracle.sqlToDataFrame(f"select nome_modelo, nome_marca from modelos where nome_modelo = {codigo}")
         return df_pedido.empty
 
     def listar_marcas(self, oracle:OracleQueries, need_connect:bool=False):
         query = """
-                select c.nome_marca
-                from clientes c
-                order by c.nome
+                select MC.MARCAS
+                from MARCAS MC
+                order by MC.MARCAS
                 """
         if need_connect:
             oracle.connect()
@@ -135,7 +135,7 @@ class Controller_Modelos:
         else:
             oracle.connect()
             # Recupera os dados do novo cliente criado transformando em um DataFrame
-            df_marca = oracle.sqlToDataFrame(f"select nome_marca from marca where marca = {marca}")
+            df_marca = oracle.sqlToDataFrame(f"select nome_marca from marcas where nome_marca = {marca}")
             # Cria um novo objeto cliente
             cliente = Marcas(df_marca .marca.values[0])
             return cliente

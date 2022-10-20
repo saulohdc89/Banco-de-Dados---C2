@@ -1,4 +1,6 @@
-select c.cpf
-     , c.nome 
-  from clientes c
- order by c.nome
+select C.CPF
+     , C.NOME
+     , C.TELEFONE 
+     ,C.ENDERECO
+  from CLIENTES C
+ order by C.NOME

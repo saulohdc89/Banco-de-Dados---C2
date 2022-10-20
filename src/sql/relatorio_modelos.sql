@@ -1,0 +1,6 @@
+select M.NOME_MODELO
+     , M.NOME_MARCA
+     , MC.NOME_MARCA as MARCAS
+  from MODELOS M
+  inner join MARCAS MC
+  on  M.NOME_MARCA = MC.NOME_MARCA
