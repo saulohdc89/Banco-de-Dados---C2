@@ -219,8 +219,21 @@ class Controller_Locacoes:
             oracle.connect()
         print(oracle.sqlToDataFrame(query))
 
+    def valida_marca(self, oracle:OracleQueries, marca:int=None) -> Modelos:
+        if self.ctrl_marcas.verifica_existencia_marca(oracle, marca):
+            print(f"O pedido {marca} informado não existe na base.")
+            return None
+        else:
+            oracle.connect()
+            # Recupera os dados do novo cliente criado transformando em um DataFrame
+            df_marca = oracle.sqlToDataFrame(f"select nome_marca from marcas where nome_marca = {marca}")
+            modelo = self.ctrl_modelos.valida_marca(oracle, df_marca.nome_modelo.values[0])
+            # Cria um novo objeto cliente
+            modelos = Modelos(df_marca.nome_marca.values[0])
+            return modelos
+
     def valida_modelo(self, oracle:OracleQueries, nome_modelo:int=None) -> Modelos:
-        if self.ctrl_modelos.verifica_existencia_marca(oracle, nome_modelo):
+        if self.ctrl_modelos.verifica_existencia_modelo(oracle, nome_modelo):
             print(f"O pedido {nome_modelo} informado não existe na base.")
             return None
         else:

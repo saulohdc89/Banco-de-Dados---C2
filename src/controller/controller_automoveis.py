@@ -48,8 +48,8 @@ class Controller_Automoveis:
         # Executa o bloco PL/SQL anônimo para inserção do novo automovel  e recuperação da chave primária criada pela sequence
         cursor.execute("""
         begin
-            :Placa := AUTOMOVEIS_CODIGO_AUTOMOVEIS_SEQ.NEXTVAL;
-            insert into automoveis values(:placa,: nome_modelo,:nome_marca,:renavam,cor,:N_portas,:tipo_combustivel));
+            :placa := AUTOMOVEIS_CODIGO_AUTOMOVEIS_SEQ.NEXTVAL;
+            insert into automoveis values(:placa,:nome_modelo,:nome_marca,:renavam,cor,:N_portas,:tipo_combustivel));
         end;
         """, data)
         # Recupera o código do novo produto
@@ -155,7 +155,7 @@ class Controller_Automoveis:
             oracle.connect()
             # Recupera os dados do novo cliente criado transformando em um DataFrame
             df_modelo = oracle.sqlToDataFrame(f"select nome_modelo , nome_marca from modelos where nome_modelo = {nome_modelo}")
-            modelo = self.ctrl_modelos.valida_marca(oracle, df_modelo.nome_modelo.values[0])
+            modelo = self.ctrl_modelos.valida_marca(oracle, df_modelo.nome_modelo.values[0],df_modelo.nome_marca.values[0] )
             # Cria um novo objeto cliente
             modelos = Modelos(df_modelo.nome_modelo.values[0], df_modelo.nome_marca.values[0])
             return modelos
@@ -169,7 +169,7 @@ class Controller_Automoveis:
             oracle.connect()
             # Recupera os dados do novo cliente criado transformando em um DataFrame
             df_modelo = oracle.sqlToDataFrame(f"select nome_modelo , nome_marca from modelos where nome_modelo = {marca}")
-            modelo = self.ctrl_modelos.valida_marca(oracle, df_modelo.nome_modelo.values[0])
+            modelo = self.ctrl_modelos.valida_marca(oracle, df_modelo.nome_modelo.values[0],df_modelo.nome_marca.values[0] )
             # Cria um novo objeto cliente
             modelos = Modelos(df_modelo.nome_modelo.values[0], df_modelo.nome_marca.values[0])
             return modelos

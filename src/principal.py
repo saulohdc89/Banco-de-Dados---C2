@@ -19,17 +19,16 @@ ctrl_locacoes = Controller_Locacoes()
 def reports(opcao_relatorio:int=0):
 
     if opcao_relatorio == 1:
-        relatorio.get_relatorio_pedidos_por_fornecedor()            
+        relatorio.get_relatorio_clientes()            
     elif opcao_relatorio == 2:
-        relatorio.get_relatorio_pedidos()
+        relatorio.get_relatorio_marcas()
     elif opcao_relatorio == 3:
-        relatorio.get_relatorio_produtos()
+        relatorio.get_relatorio_modelos()
     elif opcao_relatorio == 4:
-        relatorio.get_relatorio_clientes()
+        relatorio.get_relatorio_automoveis()
     elif opcao_relatorio == 5:
-        relatorio.get_relatorio_fornecedores()
-    elif opcao_relatorio == 6:
-        relatorio.get_relatorio_itens_pedidos()
+        relatorio.get_relatorio_locacoes()
+
 
 def inserir(opcao_inserir:int=0):
 
@@ -47,37 +46,37 @@ def inserir(opcao_inserir:int=0):
 def atualizar(opcao_atualizar:int=0):
 
     if opcao_atualizar == 1:
-      #  relatorio.get_relatorio_produtos()
-        clientes_atualizado = ctrl_clientes.atualizar_produto()
+        relatorio.get_relatorio_clientes()
+        clientes_atualizado = ctrl_clientes.atualizar_cliente()
     elif opcao_atualizar == 2:
-       # relatorio.get_relatorio_clientes()
+        relatorio.get_relatorio_marcas()
         print(f'sem necessidade de update') 
     elif opcao_atualizar == 3:
-        # relatorio.get_relatorio_fornecedores()
+        relatorio.get_relatorio_modelos()
         modelo_atualizado = ctrl_modelos.atualizar_modelo()
     elif opcao_atualizar == 4:
-    #    relatorio.get_relatorio_pedidos()
+        relatorio.get_relatorio_automoveis()
         automovel_atualizado = ctrl_automoveis.atualizar_automoveis()
     elif opcao_atualizar == 5:
-   #     relatorio.get_relatorio_itens_pedidos()
+        relatorio.get_relatorio_locacoes()
         locacao_atualizada = ctrl_locacoes.atualizar_locacoes()
 
 def excluir(opcao_excluir:int=0):
 
     if opcao_excluir == 1:
-       # relatorio.get_relatorio_produtos()
+        relatorio.get_relatorio_clientes()
         ctrl_clientes.excluir_cliente()
     elif opcao_excluir == 2:                
-        #relatorio.get_relatorio_clientes()
+        relatorio.get_relatorio_marcas()
         ctrl_marcas.excluir_marca()
     elif opcao_excluir == 3:                
-        relatorio.get_relatorio_fornecedores()
-        ctrl_modelos.excluir_pedido()
+        relatorio.get_relatorio_modelos()
+        ctrl_modelos.excluir_modelo()
     elif opcao_excluir == 4:                
-        #relatorio.get_relatorio_pedidos()
+        relatorio.get_relatorio_automoveis()
         ctrl_automoveis.excluir_automoveis();
     elif opcao_excluir == 5:
-        #relatorio.get_relatorio_itens_pedidos()
+        relatorio.get_relatorio_locacoes()
         ctrl_locacoes.excluir_locacoes()
 
 def run():

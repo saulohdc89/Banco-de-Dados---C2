@@ -38,11 +38,10 @@ class Controller_Modelos:
         end;
         """, data)
         # Recupera o código do novo modelo
-        codigo_modelo = output_value.getvalue()
         # Persiste (confirma) as alterações
         oracle.conn.commit()
         # Recupera os dados do novo modelo criado transformando em um DataFrame
-        df_modelo = oracle.sqlToDataFrame(f"select nome_modelo, nome_marca from pedidos where nome_modelo = {codigo_modelo}")
+        df_modelo = oracle.sqlToDataFrame(f"select nome_modelo, nome_marca from pedidos where nome_modelo = {novo_modelo}")
         # Cria um novo objeto modelo
         novo_modelo = Modelos(df_modelo.codigo_modelo.values[0], df_modelo.nome_modelo.values[0], marcas)
         # Exibe os atributos do novo produto
@@ -71,15 +70,15 @@ class Controller_Modelos:
             # Atualiza a descrição do produto existente
             oracle.write(f"update modelos set nome_modelo = '{nome_modelo}',nome_marca = '{marcas}') where nome_modelo = {nome_modelo}")
             # Recupera os dados do novo produto criado transformando em um DataFrame
-            df_modelo = oracle.sqlToDataFrame(f"select nome_modelo, nome_marca from pedidos where nome_modelo = {codigo_modelo}")
+            df_modelo = oracle.sqlToDataFrame(f"select nome_modelo, nome_marca from pedidos where nome_modelo = {nome_modelo}")
             # Cria um novo objeto Modelos
-            modelo_atualizado = Modelos(df_modelo.codigo_modelo.values[0], df_modelo.nome_modelo.values[0], marcas.get_char())
+            modelo_atualizado = Modelos(df_modelo.nome_modelo.values[0], df_modelo.nome_marca.values[0])
             # Exibe os atributos do novo modelo
             print(modelo_atualizado.to_string())
             # Retorna o objeto pedido_atualizado para utilização posterior, caso necessário
             return modelo_atualizado
         else:
-            print(f"O código {codigo_modelo} não existe.")
+            print(f"O código {nome_modelo} não existe.")
             return None
 
     def excluir_modelo(self):
