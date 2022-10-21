@@ -81,7 +81,7 @@ class Controller_Automoveis:
             N_portas = input("Numero de portas:")
             tipo_combustivel = input("Tipo de combustivel")
             # Atualiza a descrição do produto existente
-            oracle.write(f"update automoveis set Placa = '{nova_Placa}', cor = '{nova_cor}', n_portas = '{N_portas}', tipo_combustivel = '{tipo_combustivel}' where codigo_produto = {Placa},")
+            oracle.write(f"update automoveis set Placa = '{nova_Placa}', renavam = '{renavam}' ,cor = '{nova_cor}', n_portas = '{N_portas}', tipo_combustivel = '{tipo_combustivel}' where placa = {Placa},")
             # Recupera os dados do novo produto criado transformando em um DataFrame
             df_automoveis = oracle.sqlToDataFrame(f"select placa,nome_modelo,nome_marca,renavam, cor,N_portas,tipo_combustivel from automoveis where codigo_automoveis = {Placa}")
             # Cria um novo objeto Produto
