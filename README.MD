@@ -123,5 +123,5 @@ Para que possa testar as conexões com o banco de dados Oracle e o módulo Conex
 [E-Mail](mailto:saulohdc89@gmail.com)
 
 
-##Video do Youtube
-[Youtube](https://www.youtube.com/watch?v=hwtjgi9Y3k8&feature=youtu.be}
+## Video do Youtube
+[Youtube] (url:https://www.youtube.com/watch?v=hwtjgi9Y3k8&feature=youtu.be}
