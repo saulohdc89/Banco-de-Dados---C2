@@ -91,7 +91,7 @@ class Controller_Automoveis:
             # Retorna o objeto produto_atualizado para utilização posterior, caso necessário
             return produto_atualizado
         else:
-            print(f"O código {Placa} não existe.")
+            print(f"O {Placa} não existe.")
             return None
 
     def excluir_automoveis(self):
