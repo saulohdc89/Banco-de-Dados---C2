@@ -16,7 +16,6 @@ class Controller_Locacoes:
         self.ctrl_automoveis = Controller_Automoveis()
         self.ctrl_marcas= Controller_Marcas()
         self.ctrl_modelos = Controller_Modelos()
-        self.ctrl_locacoes = Controller_Locacoes()
         
 
 

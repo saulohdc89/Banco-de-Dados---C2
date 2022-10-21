@@ -19,7 +19,7 @@ class Relatorio:
             self.query_relatorio_automoveis = f.read()
 
         # Abre o arquivo com a consulta e associa a um atributo da classe
-        with open("sql/relatorio_locacoes") as f:
+        with open("sql/relatorio_locacoes.sql") as f:
             self.query_relatorio_locacoes = f.read()
 
     def get_relatorio_clientes(self):
@@ -28,7 +28,7 @@ class Relatorio:
         oracle.connect()
         # Recupera os dados transformando em um DataFrame
         print(oracle.sqlToDataFrame(self.query_relatorio_clientes))
-        input("Pressione Enter para Sair do Relatório de Pedidos")
+        input("Pressione Enter para Sair do Relatório de Clientes")
 
     def get_relatorio_marcas(self):
         # Cria uma nova conexão com o banco que permite alteração
@@ -36,7 +36,7 @@ class Relatorio:
         oracle.connect()
         # Recupera os dados transformando em um DataFrame
         print(oracle.sqlToDataFrame(self.query_relatorio_marcas))
-        input("Pressione Enter para Sair do Relatório de Fornecedores")
+        input("Pressione Enter para Sair do Relatório de Marcas")
 
     def get_relatorio_modelos(self):
         # Cria uma nova conexão com o banco que permite alteração
@@ -44,7 +44,7 @@ class Relatorio:
         oracle.connect()
         # Recupera os dados transformando em um DataFrame
         print(oracle.sqlToDataFrame(self.query_relatorio_modelos))
-        input("Pressione Enter para Sair do Relatório de Produtos")
+        input("Pressione Enter para Sair do Relatório de Modelos")
 
     def get_relatorio_automoveis(self):
         # Cria uma nova conexão com o banco que permite alteração
@@ -52,7 +52,7 @@ class Relatorio:
         oracle.connect()
         # Recupera os dados transformando em um DataFrame
         print(oracle.sqlToDataFrame(self.query_relatorio_automoveis))
-        input("Pressione Enter para Sair do Relatório de Clientes")
+        input("Pressione Enter para Sair do Relatório de Automoveis")
 
     def get_relatorio_locacoes(self):
         # Cria uma nova conexão com o banco que permite alteração
@@ -60,6 +60,6 @@ class Relatorio:
         oracle.connect()
         # Recupera os dados transformando em um DataFrame
         print(oracle.sqlToDataFrame(self.query_relatorio_locacoes))
-        input("Pressione Enter para Sair do Relatório de Fornecedores")
+        input("Pressione Enter para Sair do Relatório de Locacoes")
 
     

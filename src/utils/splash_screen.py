@@ -23,7 +23,7 @@ class SplashScreen:
         oracle = OracleQueries()
         oracle.connect()
         # Retorna o total de registros computado pela query
-        return oracle.sqlToDataFrame(self.qry_total_marcas)["total_produtos"].values[0]
+        return oracle.sqlToDataFrame(self.qry_total_marcas)["total_marcas"].values[0]
 
     def get_total_clientes(self):
         # Cria uma nova conexão com o banco que permite alteração
@@ -37,21 +37,21 @@ class SplashScreen:
         oracle = OracleQueries()
         oracle.connect()
         # Retorna o total de registros computado pela query
-        return oracle.sqlToDataFrame(self.qry_total_modelos)["total_fornecedores"].values[0]
+        return oracle.sqlToDataFrame(self.qry_total_modelos)["total_modelos"].values[0]
 
     def get_total_automoveis(self):
         # Cria uma nova conexão com o banco que permite alteração
         oracle = OracleQueries()
         oracle.connect()
         # Retorna o total de registros computado pela query
-        return oracle.sqlToDataFrame(self.qry_total_automoveis)["total_pedidos"].values[0]
+        return oracle.sqlToDataFrame(self.qry_total_automoveis)["total_automoveis"].values[0]
 
     def get_total_locacaoes(self):
         # Cria uma nova conexão com o banco que permite alteração
         oracle = OracleQueries()
         oracle.connect()
         # Retorna o total de registros computado pela query
-        return oracle.sqlToDataFrame(self.qry_total_locacoes)["total_itens_pedido"].values[0]
+        return oracle.sqlToDataFrame(self.qry_total_locacoes)["total_locacoes"].values[0]
 
     def get_updated_screen(self):
         return f"""
