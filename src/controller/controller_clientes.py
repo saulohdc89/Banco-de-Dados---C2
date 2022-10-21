@@ -89,3 +89,5 @@ class Controller_Clientes:
         # Recupera os dados do novo cliente criado transformando em um DataFrame
         df_cliente = oracle.sqlToDataFrame(f"select cpf, nome from clientes where cpf = {cpf}")
         return df_cliente.empty
+    
+    
