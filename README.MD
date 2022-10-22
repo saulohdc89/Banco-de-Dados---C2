@@ -124,4 +124,4 @@ Para que possa testar as conexões com o banco de dados Oracle e o módulo Conex
 
 
 ## Video do Youtube
-[Youtube] (https://www.youtube.com/watch?v=hwtjgi9Y3k8&feature=youtu.be}
+[Youtube](https://www.youtube.com/watch?v=hwtjgi9Y3k8&feature=youtu.be}
