@@ -1,3 +1,3 @@
-select MC.MARCAS
+select MC.NOME_MARCA
   from MARCAS MC
- order by MC.MARCAS
+ order by MC.NOME_MARCA
