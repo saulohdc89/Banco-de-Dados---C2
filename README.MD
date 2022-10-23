@@ -1,3 +1,12 @@
+#Nomes dos Integrantes:
+FERNANDO CARLOS VIDAL DA SILVA
+FLAVIO ROBERTO FERREIRA
+MATHEUS MOREIRA ALVES
+PAULO HENRIQUE OLIVEIRA MARCIANO
+SAULO HENRIQUE DE CASTRO
+Grupo 7
+
+
 # Exemplo de Sistema em Python fazendo CRUD no Oracle
 
 Esse sistema de exemplo é composto por um conjunto de tabelas que representam pedidos de vendas, contendo tabelas como: clientes, fornecedores, produtos, pedidos e itens de pedido.
@@ -123,5 +132,7 @@ Para que possa testar as conexões com o banco de dados Oracle e o módulo Conex
 [E-Mail](mailto:saulohdc89@gmail.com)
 
 
-## Video do Youtube
-[Youtube] (https://www.youtube.com/watch?v=hwtjgi9Y3k8&feature=youtu.be)
+## Videos
+https://www.youtube.com/watch?v=hwtjgi9Y3k8&feature=youtu.be
+https://youtu.be/hwtjgi9Y3k8
+https://youtu.be/M3Zw1EheV7I
