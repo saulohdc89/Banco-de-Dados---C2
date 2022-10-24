@@ -50,9 +50,9 @@ class Controller_Clientes:
             novo_telefone = input("Telefone:")
 
             # Atualiza o nome do cliente existente
-            oracle.write(f"update clientes set nome = '{novo_nome},{novo_endereco},{novo_telefone}' where cpf = {cpf}")
+            oracle.write(f"update clientes set nome = '{novo_nome},{novo_endereco},{novo_telefone}' where cpf = '{cpf}'")
             # Recupera os dados do novo cliente criado transformando em um DataFrame
-            df_cliente = oracle.sqlToDataFrame(f"select cpf, nome from clientes where cpf = {cpf}")
+            df_cliente = oracle.sqlToDataFrame(f"select cpf, nome from clientes where cpf = '{cpf}'")
             # Cria um novo objeto cliente
             cliente_atualizado = Clientes(df_cliente.cpf.values[0], df_cliente.nome.values[0])
             # Exibe os atributos do novo cliente
@@ -74,9 +74,9 @@ class Controller_Clientes:
         # Verifica se o cliente existe na base de dados
         if not self.verifica_existencia_cliente(oracle, cpf):            
             # Recupera os dados do novo cliente criado transformando em um DataFrame
-            df_cliente = oracle.sqlToDataFrame(f"select cpf, nome from clientes where cpf = {cpf}")
+            df_cliente = oracle.sqlToDataFrame(f"select cpf, nome from clientes where cpf = '{cpf}'")
             # Revome o cliente da tabela
-            oracle.write(f"delete from clientes where cpf = {cpf}")            
+            oracle.write(f"delete from clientes where cpf = '{cpf}'")            
             # Cria um novo objeto Cliente para informar que foi removido
             cliente_excluido = Clientes(df_cliente.cpf.values[0], df_cliente.nome.values[0], df_cliente.endereco.values[0],df_cliente.telefone.values[0])
             # Exibe os atributos do cliente excluído
@@ -87,7 +87,7 @@ class Controller_Clientes:
 
     def verifica_existencia_cliente(self, oracle:OracleQueries, cpf:str=None) -> bool:
         # Recupera os dados do novo cliente criado transformando em um DataFrame
-        df_cliente = oracle.sqlToDataFrame(f"select cpf, nome from clientes where cpf = {cpf}")
+        df_cliente = oracle.sqlToDataFrame(f"select cpf, nome from clientes where cpf = '{cpf}'")
         return df_cliente.empty
     
     

@@ -29,11 +29,11 @@ class Controller_Modelos:
         novo_modelo = input("Modelo: (Novo)")
 
         # Cria um dicionário para mapear as variáveis de entrada e saída
-        data = dict(codigo = output_value, nome_modelo = novo_modelo, nome_marca=marcas.get_marcas())
+        data = dict( nome_modelo = novo_modelo, nome_marca=marcas.get_marcas())
         # Executa o bloco PL/SQL anônimo para inserção do novo produto e recuperação da chave primária criada pela sequence
         cursor.execute("""
         begin
-            :nome_modelo := MODELOS_CODIGO_MODELOS_SEQ.NEXTVAL;
+           
             insert into modelos values(:nome_modelo, :nome_marca);
         end;
         """, data)
@@ -41,9 +41,9 @@ class Controller_Modelos:
         # Persiste (confirma) as alterações
         oracle.conn.commit()
         # Recupera os dados do novo modelo criado transformando em um DataFrame
-        df_modelo = oracle.sqlToDataFrame(f"select nome_modelo, nome_marca from pedidos where nome_modelo = {novo_modelo}")
+        df_modelo = oracle.sqlToDataFrame(f"select nome_modelo, nome_marca from pedidos where nome_modelo = '{novo_modelo}'")
         # Cria um novo objeto modelo
-        novo_modelo = Modelos(df_modelo.codigo_modelo.values[0], df_modelo.nome_modelo.values[0], marcas)
+        novo_modelo = Modelos(df_modelo.nome_modelo.values[0], df_modelo.nome.marca.values[0])
         # Exibe os atributos do novo produto
         print(novo_modelo.to_string())
         # Retorna o objeto novo_pedido para utilização posterior, caso necessário
@@ -68,9 +68,9 @@ class Controller_Modelos:
             if marcas == None:
                 return None
             # Atualiza a descrição do produto existente
-            oracle.write(f"update modelos set nome_modelo = '{nome_modelo}',nome_marca = '{marcas}') where nome_modelo = {nome_modelo}")
+            oracle.write(f"update modelos set nome_modelo = '{nome_modelo}',nome_marca = '{marcas}') where nome_modelo = '{nome_modelo}'")
             # Recupera os dados do novo produto criado transformando em um DataFrame
-            df_modelo = oracle.sqlToDataFrame(f"select nome_modelo, nome_marca from pedidos where nome_modelo = {nome_modelo}")
+            df_modelo = oracle.sqlToDataFrame(f"select nome_modelo, nome_marca from pedidos where nome_modelo = '{nome_modelo}'")
             # Cria um novo objeto Modelos
             modelo_atualizado = Modelos(df_modelo.nome_modelo.values[0], df_modelo.nome_marca.values[0])
             # Exibe os atributos do novo modelo
@@ -87,12 +87,12 @@ class Controller_Modelos:
         oracle.connect()
 
         # Solicita ao usuário o código do produto a ser alterado
-        codigo_modelo = int(input("Código do modelo que irá excluir: "))        
+        codigo_modelo = str(input("modelo que irá excluir: "))        
 
         # Verifica se o produto existe na base de dados
         if not self.verifica_existencia_modelo(oracle, codigo_modelo):            
             # Recupera os dados do novo produto criado transformando em um DataFrame
-            df_modelo = oracle.sqlToDataFrame(f"select codigo, data_pedido, cpf, cnpj from pedidos where codigo_pedido = {codigo_modelo}")
+            df_modelo = oracle.sqlToDataFrame(f"select codigo, data_pedido, cpf, cnpj from pedidos where codigo_pedido = '{codigo_modelo}'")
             marcas = self.marca(oracle, df_modelo.nome_marca.values[0])
             
             opcao_excluir = input(f"Tem certeza que deseja excluir o pedido {codigo_modelo} [S ou N]: ")
@@ -112,7 +112,7 @@ class Controller_Modelos:
         else:
             print(f"O código {codigo_modelo} não existe.")
 
-    def verifica_existencia_modelo(self, oracle:OracleQueries, codigo:int=None) -> bool:
+    def verifica_existencia_modelo(self, oracle:OracleQueries, codigo:str=None) -> bool:
         # Recupera os dados do novo pedido criado transformando em um DataFrame
         df_pedido = oracle.sqlToDataFrame(f"select nome_modelo, nome_marca from modelos where nome_modelo = {codigo}")
         return df_pedido.empty
