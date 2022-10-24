@@ -48,7 +48,6 @@ class Controller_Automoveis:
         # Executa o bloco PL/SQL anônimo para inserção do novo automovel  e recuperação da chave primária criada pela sequence
         cursor.execute("""
         begin
-            :placa := AUTOMOVEIS_CODIGO_AUTOMOVEIS_SEQ.NEXTVAL;
             insert into automoveis values(:placa,:nome_modelo,:nome_marca,:renavam,cor,:N_portas,:tipo_combustivel));
         end;
         """, data)
@@ -56,7 +55,7 @@ class Controller_Automoveis:
         # Persiste (confirma) as alterações
         oracle.conn.commit()
         # Recupera os dados do novo produto criado transformando em um DataFrame
-        df_automoveis = oracle.sqlToDataFrame(f"select Placa,nome_mdelo,nome_marca,renavam, cor,N_portas,tipo_combustivel from automoveis where Placa = {nova_Placa}")
+        df_automoveis = oracle.sqlToDataFrame(f"select Placa,nome_mdelo,nome_marca,renavam, cor,N_portas,tipo_combustivel from automoveis where Placa = '{nova_Placa}'")
         # Cria um novo objeto Produto
         novo_automoveis = Automoveis(df_automoveis.codigo_automovel.values[0], df_automoveis.values[0])
         # Exibe os atributos do novo produto
@@ -70,7 +69,7 @@ class Controller_Automoveis:
         oracle.connect()
 
         # Solicita ao usuário o código do automoveis a ser alterado
-        Placa = int(input("Código do Automoveis que irá alterar: "))        
+        Placa = input("Código do Automoveis que irá alterar: ")      
 
         # Verifica se o automoveis existe na base de dados
         if not self.verifica_existencia_automoveis(oracle, Placa):
@@ -81,9 +80,9 @@ class Controller_Automoveis:
             N_portas = input("Numero de portas:")
             tipo_combustivel = input("Tipo de combustivel")
             # Atualiza a descrição do produto existente
-            oracle.write(f"update automoveis set Placa = '{nova_Placa}', renavam = '{renavam}' ,cor = '{nova_cor}', n_portas = '{N_portas}', tipo_combustivel = '{tipo_combustivel}' where placa = {Placa},")
+            oracle.write(f"update automoveis set Placa = '{nova_Placa}', renavam = '{renavam}' ,cor = '{nova_cor}', n_portas = '{N_portas}', tipo_combustivel = '{tipo_combustivel}' where placa = '{Placa}',")
             # Recupera os dados do novo produto criado transformando em um DataFrame
-            df_automoveis = oracle.sqlToDataFrame(f"select placa,nome_modelo,nome_marca,renavam, cor,N_portas,tipo_combustivel from automoveis where codigo_automoveis = {Placa}")
+            df_automoveis = oracle.sqlToDataFrame(f"select placa,nome_modelo,nome_marca,renavam, cor,N_portas,tipo_combustivel from automoveis where codigo_automoveis = '{Placa}'")
             # Cria um novo objeto Produto
             produto_atualizado = Automoveis(df_automoveis.placa.values[0], df_automoveis.df_automoveis.values[0])
             # Exibe os atributos do novo produto
@@ -107,7 +106,7 @@ class Controller_Automoveis:
             # Recupera os dados do novo automoveis criado transformando em um DataFrame
             df_automoveis = oracle.sqlToDataFrame(f"select placa,nome_modelo,nome_marca,renavam, cor,N_portas,tipo_combustivel from automoveis where codigo_automoveis = {Placa}")
             # Revome o produto da tabela
-            oracle.write(f"delete from automoveis where placa = {Placa}")            
+            oracle.write(f"delete from automoveis where placa = '{Placa}'")            
             # Cria um novo objeto Produto para informar que foi removido
             produto_excluido = Automoveis(df_automoveis.placa.values[0],df_automoveis.nome_porta.values[0],df_automoveis.nome_marca.values[0],df_automoveis.renavam.values[0] ,df_automoveis.cor.values[0],df_automoveis.N_portas.values[0],df_automoveis.tipo_combustivel.values[0])
             # Exibe os atributos do produto excluído
@@ -116,16 +115,16 @@ class Controller_Automoveis:
         else:
             print(f"O código {Placa} não existe.")
 
-    def verifica_existencia_automoveis(self, oracle:OracleQueries, codigo:int=None) -> bool:
+    def verifica_existencia_automoveis(self, oracle:OracleQueries, codigo:str=None) -> bool:
         # Recupera os dados do novo produto criado transformando em um DataFrame
-        df_produto = oracle.sqlToDataFrame(f"select Placa,nome_mdelo,nome_marca,renavam, cor,N_portas,tipo_combustivel from automoveis where Placa = {codigo}")
+        df_produto = oracle.sqlToDataFrame(f"select Placa,nome_mdelo,nome_marca,renavam, cor,N_portas,tipo_combustivel from automoveis where Placa = '{codigo}'")
         return df_produto.empty 
 
 
     def listar_marcas(self, oracle:OracleQueries, need_connect:bool=False):
         query = """
                 select mc.nome_marca
-                from marcas
+                from marcas mc
                 order by mc.nome_arca
                 """
         if need_connect:
@@ -147,28 +146,28 @@ class Controller_Automoveis:
             oracle.connect()
         print(oracle.sqlToDataFrame(query))
     
-    def valida_modelo(self, oracle:OracleQueries, nome_modelo:int=None) -> Modelos:
+    def valida_modelo(self, oracle:OracleQueries, nome_modelo:str=None) -> Modelos:
         if self.ctrl_modelos.verifica_existencia_modelo(oracle, nome_modelo):
             print(f"O pedido {nome_modelo} informado não existe na base.")
             return None
         else:
             oracle.connect()
             # Recupera os dados do novo cliente criado transformando em um DataFrame
-            df_modelo = oracle.sqlToDataFrame(f"select nome_modelo , nome_marca from modelos where nome_modelo = {nome_modelo}")
+            df_modelo = oracle.sqlToDataFrame(f"select nome_modelo , nome_marca from modelos where nome_modelo = '{nome_modelo}'")
             modelo = self.ctrl_modelos.valida_marca(oracle, df_modelo.nome_modelo.values[0],df_modelo.nome_marca.values[0] )
             # Cria um novo objeto cliente
             modelos = Modelos(df_modelo.nome_modelo.values[0], df_modelo.nome_marca.values[0])
             return modelos
 
     
-    def valida_marca(self, oracle:OracleQueries, marca:int=None) -> Modelos:
+    def valida_marca(self, oracle:OracleQueries, marca:str=None) -> Modelos:
         if self.ctrl_marcas.verifica_existencia_marca(oracle, marca):
             print(f"O pedido {marca} informado não existe na base.")
             return None
         else:
             oracle.connect()
             # Recupera os dados do novo cliente criado transformando em um DataFrame
-            df_modelo = oracle.sqlToDataFrame(f"select nome_modelo , nome_marca from modelos where nome_modelo = {marca}")
+            df_modelo = oracle.sqlToDataFrame(f"select nome_modelo , nome_marca from modelos where nome_modelo = '{marca}'")
             modelo = self.ctrl_modelos.valida_marca(oracle, df_modelo.nome_modelo.values[0],df_modelo.nome_marca.values[0] )
             # Cria um novo objeto cliente
             modelos = Modelos(df_modelo.nome_modelo.values[0], df_modelo.nome_marca.values[0])
